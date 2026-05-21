@@ -1,0 +1,58 @@
+﻿Питання:
+    1. У таблиці OrderDetail вказана OrderDetail_Price - це рахується ціна як за 1 одиницю OrderDetail_Quantity? Тобто вартість замовлення = OrderDetail_Quantity * OrderDetail_Price? Вирішувала завдання за цим принципом
+
+
+–1. Оберіть усі строки із таблиці OrderDetail, де вартість замовлення більше 50 або кількість замовлень більше 10
+
+
+SELECT *
+FROM OrderDetail
+WHERE (OrderDetail_Quantity * OrderDetail_Price) > 50
+OR OrderDetail_Quantity > 10;
+
+
+–2. Виведіть усі унікальні значення записів OrderDetail_ArticleNumber за алфавітним порядком
+
+
+SELECT DISTINCT OrderDetail_ArticleNumber 
+FROM OrderDetail
+ORDER BY OrderDetail_ArticleNumber ASC;
+
+
+--3. Виберіть замовлення (OrderHeader_Number, OrderHeader_Description), у яких кількість рядків деталей (з таблиці OrderDetail) перевищує 1
+
+
+SELECT OrderHeader. OrderHeader_Number, OrderHeader. OrderHeader_Description
+FROM OrderHeader
+JOIN OrderDetail
+ON OrderHeader. OrderHeader_ID = OrderDetail. OrderDetail_Header_ID
+GROUP BY OrderHeader. OrderHeader_Number, OrderHeader. OrderHeader_Description
+HAVING COUNT (OrderDetail. OrderDetail_Quantity) > 1;
+
+
+
+--4. Виберіть загальну кількість і суму (як кількість*ціна) для кожної статті (артикула) для всіх замовлень
+
+
+SELECT OrderDetail_ArticleNumber, SUM (OrderDetail_Quantity), SUM (OrderDetail_Quantity * OrderDetail_Price)
+FROM OrderDetail
+GROUP BY OrderDetail_ArticleNumber;
+
+
+
+–5 . Напишіть запит для відображення всіх записів полів OrderHeader_Number,  OrderHeader_Description та OrderDetail_ArticleNumber, OrderDetail_Quantity, OrderDetail_Price за умови, що OrderDetail_Quantity  більше 3 та відсортуйте всі записи за збільшенням вартості.
+
+
+SELECT OrderHeader. OrderHeader_Number,
+       OrderHeader. OrderHeader_Description, 
+       OrderDetail. OrderDetail_ArticleNumber, 
+       OrderDetail. OrderDetail_Quantity, 
+       OrderDetail. OrderDetail_Price
+FROM OrderHeader
+JOIN OrderDetail
+ON OrderHeader. OrderHeader_ID = OrderDetail. OrderDetail_Header_ID
+WHERE OrderDetail. OrderDetail_Quantity > 3
+ORDER BY (OrderDetail_Quantity * OrderDetail_Price) ASC;
+
+
+
